@@ -25,3 +25,5 @@ router.post("/student/delete-lesson", admin_controller.student_lesson_remove_pos
 
 router.get("/student/password-reset", admin_controller.student_reset_password_get);
 router.post("/student/password-reset", admin_controller.student_reset_password_post);
+
+module.exports = router;
