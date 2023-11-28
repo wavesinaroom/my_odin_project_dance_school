@@ -32,6 +32,10 @@ exports.student_delete_get = asyncHandler(async(req,res,next)=>{
 
 });
 
+exports.student_delete_post = asyncHandler(async(req,res,next)=>{
+
+});
+
 exports.student_lesson_add_get = asyncHandler(async(req,res,next)=>{
 
 });
