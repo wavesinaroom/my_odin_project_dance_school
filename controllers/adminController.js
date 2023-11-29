@@ -2,7 +2,7 @@ const Lesson = require("../models/lesson");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Admin main");
+  res.render("admin_create_lesson");
 });
 
 exports.lesson_create_get = asyncHandler(async(req,res,next)=>{
