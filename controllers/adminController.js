@@ -78,8 +78,18 @@ exports.lesson_create_post= [
       res.render("admin_create_lesson_form", {errors: errors.array()});
       return;
     }else{
-      await lesson.save();
-      res.redirect("/admin");
+      const classroomTaken = await Lesson.findOne({day: req.body.day, time: req.body.time, classroom: req.body.classroom});
+
+      const teacherBusy = await Lesson.findOne({day: req.body.day, time:req.body.time, teacher: req.body.teacher});
+      
+      if(teacherBusy)
+        res.render("admin_create_teacher_busy", {time:req.body.time, day:req.body.day});
+      else if(classroomTaken)
+        res.render("admin_create_lesson_exists", {time:req.body.time, day: req.body.day});
+      else{
+        await lesson.save();
+        res.redirect("/admin");
+      }
     }
 
   })

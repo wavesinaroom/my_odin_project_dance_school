@@ -1,0 +1,7 @@
+extends admin_main
+
+body content
+  h1= Can't create lesson
+  p A lesson at #time on #day already exists. 
+
+  button
