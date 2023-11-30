@@ -20,13 +20,22 @@ exports.lesson_create_post= [
     .isNumeric()
     .withMessage("Number of spots must be a number"),
 
-  body("day_time")
+  body("day")
     .trim()
     .escape()
     .isLength({min:1})
-    .withMessage("Day and time must be specified")
-    .isAlphanumeric()
-    .withMessage("Day and time has non-alphanumeric characters."),
+    .withMessage("Day must be specified")
+    .isString()
+    .withMessage("Day has non-alphanumeric characters."),
+
+
+  body("time")
+    .trim()
+    .escape()
+    .isLength({min:1})
+    .withMessage("Time must be specified")
+    .isString()
+    .withMessage("Time Should be in 12 or 24 hour format"),
 
   body("teacher")
     .trim()
@@ -58,7 +67,8 @@ exports.lesson_create_post= [
     const lesson = new Lesson({
       number_spots: req.body.number_spots,
       available_spots: req.body.number_spots,
-      day_time: req.body.day_time,
+      day: req.body.day,
+      time: req.body.time,
       teacher: req.body.teacher,
       style: req.body.style,
       classroom: req.body.classroom

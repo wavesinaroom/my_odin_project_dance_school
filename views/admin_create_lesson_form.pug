@@ -7,8 +7,16 @@ block content
   form(method='POST' action='')
     label(for='number_spots') Spots available
     input(type='text', name='number_spots', required='true')
-    label(for='day_time') Day/time
-    input(type='text', name='day_time', required='true')
+    label(for='day') Day
+    select(name='day', id='day')
+      option(value='') --Please choose a day--
+      option(value='Monday') Monday
+      option(value='Tuesday') Tuesday
+      option(value='Wednesday') Wednesday
+      option(value='Thursday') Thursday
+      option(value='Friday') Friday
+    label(for='time') Time
+    input(type='time', name='time', required='true')
     label(for='teacher') Teacher
     input(type='text', name='teacher', required='true')
     label(for='style') Dance style
