@@ -11,7 +11,7 @@ const adminRouter = require('./routes/admin');
 var app = express();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/?retryWrites=true&w=majority"
+const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
 
 main().catch((err) => console.log(err));
 async function main(){

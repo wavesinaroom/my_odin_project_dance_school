@@ -1,0 +1,24 @@
+extends admin_main
+
+block content
+
+  h1 Create lesson
+
+  form(method='POST' action='')
+    label(for='number_spots') Spots available
+    input(type='text', name='number_spots', required='true')
+    label(for='day_time') Day/time
+    input(type='text', name='day_time', required='true')
+    label(for='teacher') Teacher
+    input(type='text', name='teacher', required='true')
+    label(for='style') Dance style
+    input(type='text', name='style', required='true')
+    label(for='classroom') Classroom
+    input(type='text', name='classroom', required='true')
+    input(type='submit' value='Create')
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
+    
