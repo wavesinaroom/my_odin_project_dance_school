@@ -1,0 +1,11 @@
+extends admin_main
+
+block content
+  h1 Lessons timetable
+
+  each lesson in lessons
+    p #{lesson.teacher}
+    p #{lesson.day} 
+    p #{lesson.time}
+    p #{lesson.style}
+    p #{lesson.classroom}

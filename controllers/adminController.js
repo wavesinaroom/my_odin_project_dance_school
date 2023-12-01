@@ -96,7 +96,8 @@ exports.lesson_create_post= [
 ]
 
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Delete lesson GET");
+  const lessons = await Lesson.find({});
+  res.render("admin_delete_lessons_table", {lessons: lessons})
 });
 
 exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
