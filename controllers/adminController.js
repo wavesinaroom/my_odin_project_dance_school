@@ -96,12 +96,14 @@ exports.lesson_create_post= [
 ]
 
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
-  const lessons = await Lesson.find({});
+  const lessons = await Lesson.find({}).exec();
   res.render("admin_delete_lessons_table", {lessons: lessons})
 });
 
 exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Delete lesson POST");
+  await Lesson.findByIdAndDelete(req.body.lessonid).exec();
+  const lessons = await Lesson.find({}).exec();
+  res.render("admin_delete_lessons_table", {lessons:lessons});
 });
 
 exports.student_sign_up_get = asyncHandler(async(req,res,next)=>{

@@ -9,3 +9,6 @@ block content
     p #{lesson.time}
     p #{lesson.style}
     p #{lesson.classroom}
+    form(method='POST' action='')
+      input(type='hidden', name='lessonid', value=lesson._id, required='true')
+      button(type='submit') Delete
