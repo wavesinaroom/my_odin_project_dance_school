@@ -98,6 +98,7 @@ exports.lesson_create_post= [
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
   const lessons = await Lesson.find({}).exec();
   res.render("admin_delete_lessons_table", {lessons: lessons})
+  res.redirect("/admin");
 });
 
 exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
