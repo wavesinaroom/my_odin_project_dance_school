@@ -1,0 +1,17 @@
+extends admin_main
+
+block content
+
+  h1 Student signup
+
+  form(method='POST' action='')
+    label(for='name') Name
+    input(type='text', name='name', required='true')
+    label(for='surname') Surname
+    input(type='text', name='surname', required='true')
+    label(for='username') Username
+    input(type='text', name='username', required='true')
+    label(for='password') Password
+    input(type='password', name='password', required='true')
+    input(type='submit', value='Create')
+

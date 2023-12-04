@@ -104,7 +104,7 @@ exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_sign_up_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Create student GET");
+  res.render("admin_sign_up_student_form");
 });
 
 exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
