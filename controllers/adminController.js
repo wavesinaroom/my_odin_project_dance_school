@@ -41,17 +41,13 @@ exports.lesson_create_post= [
     .trim()
     .escape()
     .isLength({min:1})
-    .withMessage("Teacher's must be specified")
-    .isAlpha()
-    .withMessage("Teacher's name must not have numbers or special characters"),
+    .withMessage("Teacher's must be specified"),
 
   body("style")
     .trim()
     .isLength({min:1})
     .escape()
-    .withMessage("Dance style must be specified")
-    .isAlpha()
-    .withMessage("Dance style must not have numbers or special characters"),
+    .withMessage("Dance style must be specified"),
 
   body("classroom")
     .trim()

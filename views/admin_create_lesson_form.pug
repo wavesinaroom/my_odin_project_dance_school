@@ -16,13 +16,16 @@ block content
       option(value='Thursday') Thursday
       option(value='Friday') Friday
     label(for='time') Time
-    input(type='time', name='time', required='true')
+    input(type='time', name='time', required='true', max='20:00', min='08:00')
     label(for='teacher') Teacher
     input(type='text', name='teacher', required='true')
     label(for='style') Dance style
     input(type='text', name='style', required='true')
     label(for='classroom') Classroom
-    input(type='text', name='classroom', required='true')
+    select(name='classroom', id='classroom')
+      option(value='') --Please choose a classroom--
+      option(value='A') A
+      option(value='B') B
     input(type='submit' value='Create')
 
   if errors
