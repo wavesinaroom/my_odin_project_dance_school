@@ -1,0 +1,15 @@
+extends admin_main
+
+block content
+
+  h1= "Lesson Booking" 
+  h2= Dashboard
+  each lesson in lessons
+    dl
+      dt #{lesson.style}
+      dd #{lesson.teacher}
+      dd #{lesson.day}
+      dd #{lesson.time}
+      dd #{lesson.classroom}
+      dd #{lesson.number_spots} / #{lesson.available_spots}
+

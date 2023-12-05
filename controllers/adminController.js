@@ -159,10 +159,8 @@ exports.student_sign_up_post = [
 ];
 
 exports.student_remove_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_remove_student_form.pug")
+  res.render("admin_remove_student_form");
 });
-
-exports.student_remove_post = [
 
 exports.student_remove_post = asyncHandler(async(req,res,next)=>{
   if(req.body.resultid){
@@ -192,10 +190,10 @@ exports.student_remove_post = asyncHandler(async(req,res,next)=>{
       }
     }
   }),
-] 
 
 exports.student_lesson_book_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Book student lesson GET");
+  const lessons = await Lesson.find({}).exec();
+  res.render("admin_student_lesson_book", {lessons:lessons});
 });
 
 exports.student_lesson_book_post = asyncHandler(async(req,res,next)=>{
