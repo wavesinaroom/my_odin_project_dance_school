@@ -62,7 +62,7 @@ exports.lesson_create_post= [
 
     const lesson = new Lesson({
       number_spots: req.body.number_spots,
-      available_spots: req.body.number_spots,
+      booked_spots: "0",
       day: req.body.day,
       time: req.body.time,
       teacher: req.body.teacher,

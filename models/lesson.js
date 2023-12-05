@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const LessonSchema = new Schema({
   number_spots: {type:Number, required: true},
-  available_spots: {type:Number, required:true},
+  booked_spots: {type:Number, required:true},
   day: {type: String, required: true},
   time: {type: String, required: true},
   teacher: {type:String, required:true},
