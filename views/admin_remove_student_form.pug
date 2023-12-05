@@ -1,0 +1,19 @@
+extend admin_main
+
+block content
+  h1= 'Delete Student' 
+  form(method='POST', action='')
+    label(for='name') Name
+    input(type='search', name='name', required='true')
+    label(for='surname') Surname
+    input(type='surname', name='surname', required='true')
+    input(type='submit', value='Search')
+
+  if result
+    h1= Results
+    p #{result.name}
+    p #{result.surname}
+    p #{result.username}
+    form(method='POST', action='')
+      input(type='hidden', name='resultid', required='true', value=result._id)
+      button(type='submit') Delete

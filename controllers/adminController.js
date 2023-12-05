@@ -159,12 +159,40 @@ exports.student_sign_up_post = [
 ];
 
 exports.student_remove_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Delete student GET");
+  res.render("admin_remove_student_form.pug")
 });
 
+exports.student_remove_post = [
+
 exports.student_remove_post = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Delete student POST");
-});
+  if(req.body.resultid){
+    await Student.findByIdAndDelete(req.body.resultid).exec();
+    res.redirect("/admin")
+    return;
+  }else{
+    body("name")
+      .trim()
+      .isLength({min:1})
+      .escape()
+      .withMessage("Name is required");
+
+    body("surname")
+      .trim()
+      .isLength({min:1})
+      .escape()
+      .withMessage("Surname is required");
+
+      const errors = validationResult(req);
+      const result = await Student.findOne({name: req.body.name, surname: req.body.surname}).exec();
+
+      if(!errors.isEmpty())
+        res.render("admin_remove_student_form", {errors: errors.array()});
+      else{
+        res.render("admin_remove_student_form", {result: result});
+      }
+    }
+  }),
+] 
 
 exports.student_lesson_book_get = asyncHandler(async(req,res,next)=>{
   res.send("NOT IMPLEMENTED: Book student lesson GET");
