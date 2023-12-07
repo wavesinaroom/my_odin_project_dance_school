@@ -17,8 +17,8 @@ router.post("/student/signup", admin_controller.student_sign_up_post);
 router.get("/student/remove", admin_controller.student_remove_get);
 router.post("/student/remove", admin_controller.student_remove_post);
 
-router.get("/student/book-lesson", admin_controller.student_lesson_book_get);
-router.post("/student/book-lesson", admin_controller.student_lesson_book_post);
+router.get("/student/book-lesson", admin_controller.student_lesson_booking_get);
+router.post("/student/book-lesson", admin_controller.student_lesson_booking_post);
 
 router.get("/student/cancel-lesson", admin_controller.student_lesson_cancel_get);
 router.post("/student/cancel-lesson", admin_controller.student_lesson_cancel_post);

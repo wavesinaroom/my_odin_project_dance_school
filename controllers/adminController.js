@@ -191,13 +191,52 @@ exports.student_remove_post = asyncHandler(async(req,res,next)=>{
     }
   }),
 
-exports.student_lesson_book_get = asyncHandler(async(req,res,next)=>{
+exports.student_lesson_booking_get = asyncHandler(async(req,res,next)=>{
   const lessons = await Lesson.find({}).exec();
-  res.render("admin_student_lesson_book", {lessons:lessons});
+  res.render("admin_student_lesson_booking", {lessons:lessons});
 });
 
-exports.student_lesson_book_post = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Book student lesson POST");
+exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
+    body("name")
+      .trim()
+      .isLength()
+      .escape()
+      .withMessage("Name is required");
+
+    body('surname')
+      .trim()
+      .isLength()
+      .escape()
+      .withMessage("Surname is required");
+
+    body('style')
+      .trim()
+      .isLength()
+      .escape()
+      .withMessage("Style is required")
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()){
+    res.render("admin_student_lesson_booking", {errors: errors.array()});
+  }
+  
+  const lesson = await Lesson.findOne({style: req.body.style}).exec();
+  const booked = await Student.find({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
+
+  if(!booked){
+    res.send("Lesson is already booked")
+    return;
+  }else{
+    if(lesson.booked_spots<lesson.number_spots){
+      await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
+      await Lesson.findOneAndUpdate({style: req.body.style, $inc: {booked_spots: 1}}).exec();
+      res.redirect("/admin");
+    }else{
+      res.send("Lesson is not available")
+    }
+  }
+  
 });
 
 exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{

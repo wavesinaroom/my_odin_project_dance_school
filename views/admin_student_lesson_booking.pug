@@ -1,0 +1,23 @@
+extends admin_main
+
+block content
+
+  h1= "Lesson Booking" 
+  h2= Dashboard
+  form(method='POST' action='')
+    label(for='name') Student name
+    input(type='search', id='name', name='name')
+    label(for='surname') Student surname
+    input(type='search', id='surname', name='surname')
+    label(for='style') Class style
+    input(type='search', id='style', name='style')
+    button(type='submit') Book
+  each lesson in lessons
+    dl
+      dt #{lesson.style}
+      dd #{lesson.teacher}
+      dd #{lesson.day}
+      dd #{lesson.time}
+      dd #{lesson.classroom}
+      dd #{lesson.number_spots} / #{lesson.booked_spots}
+

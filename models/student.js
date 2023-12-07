@@ -6,7 +6,7 @@ const StudentSchema = new Schema({
   surname: {type: String, required: true, maxLength: 100},
   username: {type: String, required: true, maxLength: 100},
   password: {type: String, required: true, maxLength:100},
-  lessons: [{type: Schema.Types.ObjectId, ref: "LessonSchema"}]
+  lessons: [{type: Schema.Types.ObjectId, ref: "lesson"}]
 });
 
 module.exports = mongoose.model("student", StudentSchema);
