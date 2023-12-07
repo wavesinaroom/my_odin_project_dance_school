@@ -222,9 +222,9 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
   }
   
   const lesson = await Lesson.findOne({style: req.body.style}).exec();
-  const booked = await Student.find({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
+  const booked = await Student.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
 
-  if(!booked){
+  if(booked){
     res.send("Lesson is already booked")
     return;
   }else{
