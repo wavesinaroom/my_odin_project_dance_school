@@ -225,12 +225,13 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
   const booked = await Student.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
 
   if(booked){
-    res.redirect("/admin");
+    res.send("Lesson's already booked");
     return;
   }else{
     if(lesson.booked_spots<lesson.number_spots){
       await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
       await Lesson.findByIdAndUpdate(lesson._id, {$inc: {booked_spots: 1}}).exec();
+      res.redirect("/admin");
     }else{
       res.send("Lesson is not available")
     }
