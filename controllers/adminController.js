@@ -240,11 +240,30 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_lesson_cancel_form")
+  res.render("admin_lesson_cancel_form");
 });
 
 exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Remove student lesson POST");
+  body("name")
+    .trim()
+    .isLength()
+    .escape()
+    .withMessage("Name is required");
+
+  body("surname")
+    .trim()
+    .isLength()
+    .escape()
+    .withMessage("Surname is required");
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty())
+    res.render("admin_lesson_cancel_form", {errors: errors.array()});
+
+  const student = await Student.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
+  console.log(student);
+  res.render("admin_lesson_cancel_form", {lessons:student.lessons});
 });
 
 exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{

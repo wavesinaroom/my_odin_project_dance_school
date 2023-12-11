@@ -9,15 +9,15 @@ block content
     input(type='search', id='surname', name='surname')
     button(type='submit') Find
 
-  if result
-    each result in results
+  if lessons
+    each lesson in lessons
       form(method='POST', action='')
       dl
-        dt #{result.style}
-        dd #{result.teacher}
-        dd #{result.day}
-        dd #{result.time}
-        dd #{result.classroom}
-      input(type='hidden', id=result._id, name=result._id)
+        dt #{lesson.style}
+        dd #{lesson.teacher}
+        dd #{lesson.day}
+        dd #{lesson.time}
+        dd #{lesson.classroom}
+      input(type='hidden', id=lesson._id, name=lesson._id)
       button(type='submit') Cancel
 
