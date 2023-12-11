@@ -276,7 +276,7 @@ exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{
-  res.send("NOT IMPLEMENTED: Reset student password GET");
+  res.render("admin_password_update_form");
 });
 
 exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
