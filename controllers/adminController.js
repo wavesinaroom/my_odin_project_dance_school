@@ -240,7 +240,7 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: Remove student lesson GET");
+  res.render("admin_lesson_cancel_form")
 });
 
 exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{

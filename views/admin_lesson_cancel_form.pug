@@ -1,0 +1,23 @@
+extend admin_main
+
+block content
+  h1= "Student Cancelling"
+  form(method='POST', action='')
+    label(for='name') Student name
+    input(type='search', id='name', name='name')
+    label(for='surname') Surname
+    input(type='search', id='surname', name='surname')
+    button(type='submit') Find
+
+  if result
+    each result in results
+      form(method='POST', action='')
+      dl
+        dt #{result.style}
+        dd #{result.teacher}
+        dd #{result.day}
+        dd #{result.time}
+        dd #{result.classroom}
+      input(type='hidden', id=result._id, name=result._id)
+      button(type='submit') Cancel
+
