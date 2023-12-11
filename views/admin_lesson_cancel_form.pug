@@ -4,20 +4,21 @@ block content
   h1= "Student Cancelling"
   form(method='POST', action='')
     label(for='name') Student name
-    input(type='search', id='name', name='name')
+      input(type='search', id='name', name='name', value=name)
     label(for='surname') Surname
-    input(type='search', id='surname', name='surname')
+    input(type='search', id='surname', name='surname', value=surname)
     button(type='submit') Find
-
   if lessons
     each lesson in lessons
       form(method='POST', action='')
-      dl
-        dt #{lesson.style}
-        dd #{lesson.teacher}
-        dd #{lesson.day}
-        dd #{lesson.time}
-        dd #{lesson.classroom}
-      input(type='hidden', id=lesson._id, name=lesson._id)
-      button(type='submit') Cancel
+        dl
+          dt #{lesson.style}
+          dd #{lesson.teacher}
+          dd #{lesson.day}
+          dd #{lesson.time}
+          dd #{lesson.classroom}
+        input(type='hidden', id='lessonid', name='lessonid', value=lesson._id)
+        input(type='hidden', id='name', name='name', value=name)
+        input(type='hidden', id='surname', name='surname', value=surname)
+        button(type='submit') Cancel
 

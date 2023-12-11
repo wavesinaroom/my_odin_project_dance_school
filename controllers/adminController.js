@@ -244,6 +244,7 @@ exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
+
   body("name")
     .trim()
     .isLength()
@@ -261,9 +262,17 @@ exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
   if(!errors.isEmpty())
     res.render("admin_lesson_cancel_form", {errors: errors.array()});
 
-  const student = await Student.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
-  console.log(student);
-  res.render("admin_lesson_cancel_form", {lessons:student.lessons});
+  const booked = await Student.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
+
+  if(req.body.lessonid){
+    await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc: {booked_spots:-1}}).exec();
+    await Student.findOneAndUpdate({name:req.body.name, surname:req.body.surname}, {$pull:{lessons:req.body.lessonid}}).exec();
+    res.redirect("/admin");
+    return;
+  }
+
+  res.render("admin_lesson_cancel_form", {lessons:booked.lessons, name:req.body.name, surname:req.body.surname});
+
 });
 
 exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{
