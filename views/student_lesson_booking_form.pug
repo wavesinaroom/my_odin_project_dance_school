@@ -1,0 +1,28 @@
+extend student_main
+
+block content
+  h1= "Lesson booking"
+  if name
+    form(method='POST', action='') 
+      label(for='name') Student name
+      input(type='search', name='name' id='name', value=name)
+      label(for='surname') Student surname
+      input(type='search', name='surname', id='surname', value=surname)
+      button(type='submit') Find
+    each lesson in lessons 
+      form(method='POST', action='')
+        dl  
+          dt #{lesson.style}
+          dd #{lesson.teacher}
+          dd #{lesson.day}
+          dd #{lesson.time}
+          dd #{lesson.classroom}
+          dd #{lesson.number_spots} / #{lesson.booked_spots}
+  else 
+    form(method='POST', action='') 
+      label(for='name') Student name
+      input(type='search', name='name' id='name')
+      label(for='surname') Student surname
+      input(type='search', name='surname', id='surname')
+      button(type='submit') Find
+    

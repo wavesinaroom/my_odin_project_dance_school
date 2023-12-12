@@ -8,7 +8,7 @@ exports.index = asyncHandler(async(req,res,next)=>{
 });
 
 exports.lesson_booking_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: studentes lesson booking GET");
+  res.render("student_lesson_booking_form");
 });
 
 exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
