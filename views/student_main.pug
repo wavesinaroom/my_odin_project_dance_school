@@ -1,0 +1,19 @@
+doctype html
+html(lang='en')
+  head 
+    title= "Student Hub"
+    meta(charset=utf-8)
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', ref='/stylesheet/style.css')
+  body
+
+    nav
+      ul
+        li
+          a(href='/student/lesson-book') Book lesson
+        li
+          a(href='/student/lesson-cancel') Cancel lesson
+        li
+          a(href='/student/password-update') Update password
+
+    block content

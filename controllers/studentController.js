@@ -4,7 +4,7 @@ const Lesson = require("../models/lesson");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.send("Students main menu");
+  res.render("student_main");
 });
 
 exports.lesson_booking_get = asyncHandler(async(req,res,next)=>{
