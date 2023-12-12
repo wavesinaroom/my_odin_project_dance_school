@@ -107,56 +107,48 @@ exports.student_sign_up_get = asyncHandler(async(req,res,next)=>{
   res.render("admin_sign_up_student_form");
 });
 
-exports.student_sign_up_post = [
+exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
   body("name")
     .trim()
     .isLength({min:1})
     .escape()
-    .withMessage("Name must not be empty"),
+    .withMessage("Name must not be empty");
 
   body("surname")
     .trim()
     .isLength({min:1})
     .escape()
-    .withMessage("Surname must not be empty"),
+    .withMessage("Surname must not be empty");
 
   body("username")
     .trim()
     .isLength({min:1})
     .escape()
-    .withMessage("username must not be empty"),
+    .withMessage("username must not be empty");
 
-  body("password")
-    .trim()
-    .isLength({min:1})
-    .escape()
-    .withMessage("password must not be empty"),
-
-  asyncHandler(async(req,res,next)=>{
     const errors = validationResult(req);
 
     const student = new Student({
       name: req.body.name,
       surname: req.body.surname,
       username: req.body.username,
-      password: req.body.password
+      password: 1234
     });
 
     if(!errors.isEmpty()){
       res.render("admin_sign_up_student_form", {errors: errors.array()});
-    }else{
-      const existingStudent = await Student.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
-
-      if(existingStudent)
-        res.render("admin_sign_up_student_form", {name: req.body.name, surname: surname, username: req.body.username});
-      else{
-        await student.save();
-        res.redirect("/admin");
-      }
     }
-  })
 
-];
+    const existingStudent = await Student.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
+
+    if(existingStudent){
+      res.send("Student already exists");
+      return;
+    }
+
+    await student.save();
+    res.redirect("/admin");
+});
 
 exports.student_remove_get = asyncHandler(async(req,res,next)=>{
   res.render("admin_remove_student_form");
