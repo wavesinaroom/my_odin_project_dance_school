@@ -280,5 +280,35 @@ exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{
 });
 
 exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
-  res.send("NOT IMPLEMENTED: Reset student password POST");
+  body("name")
+    .trim()
+    .isLength()
+    .escape()
+    .withMessage("Name is required");
+
+  body("surname")
+    .trim()
+    .isLength()
+    .escape()
+    .withMessage("Surname is required");
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty())
+    res.render("admin_password_update_form", {errors: errors.array()});
+
+  const student = await Student.findOne({name:req.body.name, surname:req.body.surname}).exec();
+  if(!student){
+    res.send("Student name or surname is invalid");
+    return;
+  }
+
+  if(req.body.old===student.password){
+    await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {password: req.body.password}).exec();
+    res.redirect("/admin");
+    return;
+  }
+
+  res.render("admin_password_update_form", {name:req.body.name, surname:req.body.surname});
+
 });
