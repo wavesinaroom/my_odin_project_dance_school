@@ -89,19 +89,47 @@ exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
   if(req.body.lessonid){
     await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$pull:{lessons: req.body.lessonid}});
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
-    res.redirect("/student");
+    res.redirect("/admin");
     return;
   }
 
   res.render("student_lesson_cancel_form", {name:req.body.name, surname: req.body.surname, lessons: booked.lessons});
-
-
 });
 
 exports.password_update_get = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: student password update GET");
+  res.render("student_password_update_form");
 })
 
 exports.password_update_post = asyncHandler(async(req,res,next)=>{
-  res.send("NOT IMPLEMENTED: student password update POST");
+  body("name")
+  .trim()
+  .isLength({min:1})
+  .escape()
+  .withMessage("Name is required");
+
+  body("surname")
+  .trim()
+  .isLength({min:1})
+  .escape()
+  .withMessage("Surname is required");
+
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    res.render("student_password_update_form", {errors: errors.array()});
+    return;
+  }
+  
+  const student = await Student.findOne({username:req.body.username})
+
+  if(!student){
+    res.send("Student not found");
+    return;
+  }
+
+  if(req.body.old_password&&student.password===req.body.old_password){
+      await Student.findOneAndUpdate({username: req.body.username}, {password:req.body.new_password});
+      res.redirect("/student");
+      return;
+  }
+  res.render("student_password_update_form", {username: req.body.username})
 })
