@@ -5,9 +5,9 @@ block content
   if name
     form(method='POST', action='') 
       label(for='name') Student name
-      input(type='search', name='name' id='name', value=name)
+      input(type='search', name='name' id='name', value=name, readonly=true)
       label(for='surname') Student surname
-      input(type='search', name='surname', id='surname', value=surname)
+      input(type='search', name='surname', id='surname', value=surname, readonly=true)
       button(type='submit') Find
     each lesson in lessons 
       form(method='POST', action='')
@@ -18,6 +18,10 @@ block content
           dd #{lesson.time}
           dd #{lesson.classroom}
           dd #{lesson.number_spots} / #{lesson.booked_spots}
+        input(type='hidden', name='name', value=name)
+        input(type='hidden', name='surname', value=surname)
+        input(type='hidden', name='lessonid', value=lesson._id)
+        button(type='submit') Book
   else 
     form(method='POST', action='') 
       label(for='name') Student name
