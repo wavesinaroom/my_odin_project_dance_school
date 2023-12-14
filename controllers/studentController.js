@@ -1,5 +1,5 @@
 const {body, validationResult} = require("express-validator");
-const Student = require("../models/student");
+const User = require("../models/student");
 const Lesson = require("../models/lesson");
 const asyncHandler = require("express-async-handler");
 
@@ -30,13 +30,13 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
     return;
   }
 
-  const student = await Student.findOne({name: req.body.name, surname: req.body.surname}).exec(); 
+  const student = await User.findOne({name: req.body.name, surname: req.body.surname}).exec(); 
   const lessons = await Lesson.find({}).exec();
   const lesson = await Lesson.findById(req.body.lessonid);
-  const existingLesson = await Student.findOne({name: req.body.name, surname:req.body.surname, lessons: lesson})
+  const existingLesson = await User.findOne({name: req.body.name, surname:req.body.surname, lessons: lesson})
 
   if(!student){
-    res.send("Student not found");
+    res.send("User not found");
     return;
   }
 
@@ -46,7 +46,7 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
   }
   
   if(req.body.lessonid){
-    await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$push: {lessons:lesson}}); 
+    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$push: {lessons:lesson}}); 
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots:1}});
     res.redirect("/student")
     return;
@@ -78,16 +78,16 @@ exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
     return;
   }
 
-  const student = await Student.findOne({name: req.body.name, surname: req.body.surname});
-  const booked = await Student.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
+  const student = await User.findOne({name: req.body.name, surname: req.body.surname});
+  const booked = await User.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
 
   if(!student){
-    res.send("Student not found");
+    res.send("User not found");
     return;
   }
 
   if(req.body.lessonid){
-    await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$pull:{lessons: req.body.lessonid}});
+    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$pull:{lessons: req.body.lessonid}});
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
     res.redirect("/admin");
     return;
@@ -119,15 +119,15 @@ exports.password_update_post = asyncHandler(async(req,res,next)=>{
     return;
   }
   
-  const student = await Student.findOne({username:req.body.username})
+  const student = await User.findOne({username:req.body.username})
 
   if(!student){
-    res.send("Student not found");
+    res.send("User not found");
     return;
   }
 
   if(req.body.old_password&&student.password===req.body.old_password){
-      await Student.findOneAndUpdate({username: req.body.username}, {password:req.body.new_password});
+      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.new_password});
       res.redirect("/student");
       return;
   }

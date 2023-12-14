@@ -13,6 +13,10 @@ var app = express();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
+const session = require("express-session");
+const passport = require("passport")
+const LocalStrategy = require("passport-local").Strategy;
+const User = require("./models/users
 
 main().catch((err) => console.log(err));
 async function main(){
@@ -30,7 +34,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
 app.use('/student', studentRouter);
 
@@ -48,6 +51,36 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+passport.use(
+  new LocalStrategy(async(username, password, done)=>{
+    try{
+      const user = await User.findOne({username: username});
+      if(!user){
+        return done(null, false, {message: "Incorrect username"});
+      };
+      if(user.password !== password){
+        return done(null, false, {message: "Incorrect password"});
+      };
+      return done(null, user);
+    }catch(err){
+      return done(err);
+    };
+  })
+)
+
+passport.serializeUser((user, done)=>{
+  done(null, user.id);
+});
+
+passport.deserializeUser(async(id, done)=>{
+  try{
+    const user = await User.findById(id);
+    done(null, user);
+  }catch(err){
+    done(err);
+  };
 });
 
 module.exports = app;

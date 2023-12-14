@@ -1,6 +1,6 @@
 const {body, validationResult} = require("express-validator");
 const Lesson = require("../models/lesson");
-const Student = require("../models/student");
+const User = require("../models/student");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
@@ -128,7 +128,7 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
 
     const errors = validationResult(req);
 
-    const student = new Student({
+    const student = new User({
       name: req.body.name,
       surname: req.body.surname,
       username: req.body.username,
@@ -139,10 +139,10 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
       res.render("admin_sign_up_student_form", {errors: errors.array()});
     }
 
-    const existingStudent = await Student.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
+    const existingUser = await User.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
 
-    if(existingStudent){
-      res.send("Student already exists");
+    if(existingUser){
+      res.send("User already exists");
       return;
     }
 
@@ -156,7 +156,7 @@ exports.student_remove_get = asyncHandler(async(req,res,next)=>{
 
 exports.student_remove_post = asyncHandler(async(req,res,next)=>{
   if(req.body.resultid){
-    await Student.findByIdAndDelete(req.body.resultid).exec();
+    await User.findByIdAndDelete(req.body.resultid).exec();
     res.redirect("/admin")
     return;
   }else{
@@ -173,7 +173,7 @@ exports.student_remove_post = asyncHandler(async(req,res,next)=>{
       .withMessage("Surname is required");
 
       const errors = validationResult(req);
-      const result = await Student.findOne({name: req.body.name, surname: req.body.surname}).exec();
+      const result = await User.findOne({name: req.body.name, surname: req.body.surname}).exec();
 
       if(!errors.isEmpty())
         res.render("admin_remove_student_form", {errors: errors.array()});
@@ -214,14 +214,14 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
   }
   
   const lesson = await Lesson.findOne({style: req.body.style}).exec();
-  const booked = await Student.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
+  const booked = await User.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
 
   if(booked){
     res.send("Lesson's already booked");
     return;
   }else{
     if(lesson.booked_spots<lesson.number_spots){
-      await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
+      await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
       await Lesson.findByIdAndUpdate(lesson._id, {$inc: {booked_spots: 1}}).exec();
       res.redirect("/admin");
     }else{
@@ -254,11 +254,11 @@ exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
   if(!errors.isEmpty())
     res.render("admin_lesson_cancel_form", {errors: errors.array()});
 
-  const booked = await Student.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
+  const booked = await User.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
 
   if(req.body.lessonid){
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc: {booked_spots:-1}}).exec();
-    await Student.findOneAndUpdate({name:req.body.name, surname:req.body.surname}, {$pull:{lessons:req.body.lessonid}}).exec();
+    await User.findOneAndUpdate({name:req.body.name, surname:req.body.surname}, {$pull:{lessons:req.body.lessonid}}).exec();
     res.redirect("/admin");
     return;
   }
@@ -289,14 +289,14 @@ exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
   if(!errors.isEmpty())
     res.render("admin_password_update_form", {errors: errors.array()});
 
-  const student = await Student.findOne({name:req.body.name, surname:req.body.surname}).exec();
+  const student = await User.findOne({name:req.body.name, surname:req.body.surname}).exec();
   if(!student){
-    res.send("Student name or surname is invalid");
+    res.send("User name or surname is invalid");
     return;
   }
 
   if(req.body.old===student.password){
-    await Student.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {password: req.body.password}).exec();
+    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {password: req.body.password}).exec();
     res.redirect("/admin");
     return;
   }
