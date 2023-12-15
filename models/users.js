@@ -9,4 +9,4 @@ const UserSchema = new Schema({
   lessons: [{type: Schema.Types.ObjectId, ref: "lesson"}]
 });
 
-module.exports = mongoose.model("student", UserSchema);
+module.exports = mongoose.model("user", UserSchema);

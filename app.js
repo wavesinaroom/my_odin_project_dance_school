@@ -16,7 +16,7 @@ const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.m
 const session = require("express-session");
 const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/users
+const User = require("./models/users")
 
 main().catch((err) => console.log(err));
 async function main(){
@@ -33,25 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/admin', adminRouter);
-app.use('/student', studentRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(session({secret: "cats", resave: false, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({extended:false}));
 
 passport.use(
   new LocalStrategy(async(username, password, done)=>{
@@ -82,5 +67,39 @@ passport.deserializeUser(async(id, done)=>{
     done(err);
   };
 });
+
+app.get("/login",(req,res)=>{
+  res.render("login")
+});
+
+app.post("/login",
+  passport.authenticate("local", {
+    failureRedirect: "/",
+  }),(req,res)=>{
+    if(req.body.username === "admin")
+      res.redirect("/admin")
+    res.redirect("/student");
+  }
+)
+
+app.use('/admin', adminRouter);
+app.use('/student', studentRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
 
 module.exports = app;

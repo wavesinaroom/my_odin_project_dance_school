@@ -1,6 +1,6 @@
 const {body, validationResult} = require("express-validator");
 const Lesson = require("../models/lesson");
-const User = require("../models/student");
+const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
