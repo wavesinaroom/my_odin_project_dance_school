@@ -1,7 +1,25 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin-left: 30vw;
+  margin-top: 30vh
 }
-a {
-  color: #00B7FF;
+
+label{
+  margin-right: 0.3em;
+  margin-left: 0.3em
+}
+
+input{
+  margin: 1em
+}
+
+button{
+  margin: 1em;
+  width: 5em;
+  height: 2em;
+}
+
+h1{
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
