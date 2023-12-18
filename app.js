@@ -68,13 +68,17 @@ passport.deserializeUser(async(id, done)=>{
   };
 });
 
+app.get("/", (req,res)=>{
+  res.redirect("/login")
+})
+
 app.get("/login",(req,res)=>{
   res.render("login")
 });
 
 app.post("/login",
   passport.authenticate("local", {
-    failureRedirect: "/",
+    failureRedirect: "/login",
   }),(req,res)=>{
     if(req.body.username === "admin")
       res.redirect("/admin")
