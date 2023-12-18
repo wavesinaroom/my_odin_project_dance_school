@@ -68,13 +68,17 @@ passport.deserializeUser(async(id, done)=>{
   };
 });
 
+app.use("/", indexRouter)
+app.use('/admin', adminRouter);
+app.use('/student', studentRouter);
+
 app.get("/login",(req,res)=>{
   res.render("login")
 });
 
-app.post("/login",
+app.post("/",
   passport.authenticate("local", {
-    failureRedirect: "/",
+    failureRedirect: "/login",
   }),(req,res)=>{
     if(req.body.username === "admin")
       res.redirect("/admin")
@@ -82,9 +86,6 @@ app.post("/login",
   }
 )
 
-app.use("/", indexRouter)
-app.use('/admin', adminRouter);
-app.use('/student', studentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
