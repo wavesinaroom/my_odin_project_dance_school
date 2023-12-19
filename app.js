@@ -78,7 +78,7 @@ app.get("/login",(req,res)=>{
 
 app.post("/",
   passport.authenticate("local", {
-    failureRedirect: "/login",
+    failureRedirect: "/",
   }),(req,res)=>{
     if(req.body.username === "admin")
       res.redirect("/admin")

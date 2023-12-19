@@ -1,16 +1,11 @@
+a{
+  text-decoration: none;
+}
+
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  margin-left: 30vw;
-  margin-top: 30vh
-}
-
-label{
-  margin-right: 0.3em;
-  margin-left: 0.3em
-}
-
-input{
-  margin: 1em
+  margin-left: 25vw;
+  margin-top: 25vh
 }
 
 button{
@@ -22,4 +17,32 @@ button{
 h1{
   margin-top: 2em;
   margin-bottom: 2em;
+}
+
+input{
+  margin: 1em
+}
+
+label{
+  margin-right: 0.3em;
+  margin-left: 0.3em
+}
+
+li{
+  margin-top: 1em;
+  margin-bottom: 1em;
+  list-style: none;
+}
+
+nav{
+  border-right: solid 2px black;
+  max-width: 10em;
+}
+
+#student{
+  display: flex;
+}
+
+#student main{
+  margin-left: 3em;
 }
