@@ -68,6 +68,7 @@ passport.deserializeUser(async(id, done)=>{
   };
 });
 
+
 app.get("/login",(req,res)=>{
   res.render("login")
 });
@@ -82,6 +83,7 @@ app.post("/login",
   }
 )
 
+app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 app.use('/student', studentRouter);
 
