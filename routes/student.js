@@ -5,8 +5,8 @@ const student_controller = require("../controllers/studentController");
 
 router.get("/", student_controller.index);
 
-router.get("/lesson-booking", student_controller.lesson_booking_get);
-router.post("/lesson-booking", student_controller.lesson_booking_post);
+router.get("/lesson-book", student_controller.lesson_booking_get);
+router.post("/lesson-book", student_controller.lesson_booking_post);
 
 router.get("/lesson-cancel", student_controller.lesson_cancel_get);
 router.post("/lesson-cancel", student_controller.lesson_cancel_post);

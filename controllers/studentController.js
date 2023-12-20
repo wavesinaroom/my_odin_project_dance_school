@@ -4,11 +4,17 @@ const Lesson = require("../models/lesson");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.render("student_main");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_main");
+  else
+    res.redirect("/login")
 });
 
 exports.lesson_booking_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_lesson_booking_form");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_lesson_booking_form");
+  else
+    res.redirect("/login")
 });
 
 exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
@@ -56,7 +62,10 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_lesson_cancel_form");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_lesson_cancel_form");
+  else
+    res.redirect("/login")
 });
 
 exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
@@ -97,7 +106,10 @@ exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.password_update_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_password_update_form");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_password_update_form");
+  else
+    res.redirect("/login")
 })
 
 exports.password_update_post = asyncHandler(async(req,res,next)=>{
