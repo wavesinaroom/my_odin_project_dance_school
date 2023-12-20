@@ -4,11 +4,17 @@ const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.render("admin_main");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_main");
+  else
+    res.redirect('/login')
 });
 
 exports.lesson_create_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_create_lesson_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_create_lesson_form");
+  else
+    res.redirect('/login')
 });
 
 exports.lesson_create_post= [
@@ -92,9 +98,12 @@ exports.lesson_create_post= [
 ]
 
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
-  const lessons = await Lesson.find({}).exec();
-  res.render("admin_delete_lessons_table", {lessons: lessons})
-  res.redirect("/admin");
+  if(typeof(req.session.passport) !== 'undefined'){
+    const lessons = await Lesson.find({}).exec();
+    res.render("admin_delete_lessons_table", {lessons: lessons})
+    res.redirect("/admin");
+  }else
+    res.redirect('/login')
 });
 
 exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
@@ -104,7 +113,10 @@ exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_sign_up_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_sign_up_student_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_sign_up_student_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
@@ -151,7 +163,10 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_remove_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_remove_student_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_remove_student_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_remove_post = asyncHandler(async(req,res,next)=>{
@@ -184,8 +199,11 @@ else{
   }),
 
 exports.student_lesson_booking_get = asyncHandler(async(req,res,next)=>{
-  const lessons = await Lesson.find({}).exec();
-  res.render("admin_student_lesson_booking", {lessons:lessons});
+  if(typeof(req.session.passport) !== 'undefined'){
+    const lessons = await Lesson.find({}).exec();
+    res.render("admin_student_lesson_booking", {lessons:lessons});
+  }else
+    res.redirect('/login')
 });
 
 exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
@@ -232,7 +250,10 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_lesson_cancel_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_lesson_cancel_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
@@ -268,7 +289,10 @@ exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{
-  res.render("admin_password_update_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_password_update_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{

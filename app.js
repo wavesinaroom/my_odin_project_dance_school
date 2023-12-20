@@ -38,6 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({extended:false}));
 
+
 passport.use(
   new LocalStrategy(async(username, password, done)=>{
     try{
@@ -67,7 +68,6 @@ passport.deserializeUser(async(id, done)=>{
     done(err);
   };
 });
-
 
 app.get("/login",(req,res)=>{
   res.render("login")
