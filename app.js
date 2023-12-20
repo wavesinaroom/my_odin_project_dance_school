@@ -77,8 +77,10 @@ app.post("/login",
   passport.authenticate("local", {
     failureRedirect: "/",
   }),(req,res)=>{
-    if(req.body.username === "admin")
+    if(req.body.username === "admin"){
       res.redirect("/admin")
+      return;
+    }
     res.redirect("/student");
   }
 )
