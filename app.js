@@ -14,9 +14,9 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
 const session = require("express-session");
-const passport = require("passport")
+const passport = require("passport"); 
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/users")
+const User = require("./models/users");
 
 main().catch((err) => console.log(err));
 async function main(){
@@ -36,8 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: "cats", resave: false, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.urlencoded({extended:false}));
 
+app.use(express.urlencoded({extended:false}));
 
 passport.use(
   new LocalStrategy(async(username, password, done)=>{
