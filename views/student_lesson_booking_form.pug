@@ -2,16 +2,17 @@ extend student_main
 
 block content
   h1= "Lesson booking"
-    each lesson in lessons 
-      form(method='POST', action='')
-        dl  
-          dt #{lesson.style}
-          dd #{lesson.teacher}
-          dd #{lesson.day}
-          dd #{lesson.time}
-          dd #{lesson.classroom}
-          dd #{lesson.number_spots} / #{lesson.booked_spots}
-        input(type='hidden', name='name', value=name)
-        input(type='hidden', name='surname', value=surname)
-        input(type='hidden', name='lessonid', value=lesson._id)
-        button(type='submit') Book
+
+  each lesson in lessons 
+    form(method='POST', action='')
+      dl  
+        dt #{lesson.style}
+        dd #{lesson.teacher}
+        dd #{lesson.day}
+        dd #{lesson.time}
+        dd #{lesson.classroom}
+        dd #{lesson.number_spots} / #{lesson.booked_spots}
+      input(type='hidden', name='name', value=name)
+      input(type='hidden', name='surname', value=surname)
+      input(type='hidden', name='lessonid', value=lesson._id)
+      button(type='submit') Book
