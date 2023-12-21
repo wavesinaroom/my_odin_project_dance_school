@@ -2,6 +2,7 @@ extend student_main
 
 block content
   h1= "Cancel lesson"
+  if booked
     each lesson in booked
       form(method='POST', action='')
         dl

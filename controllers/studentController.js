@@ -41,46 +41,17 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
 exports.lesson_cancel_get = asyncHandler(async(req,res,next)=>{
   if(typeof(req.session.passport)!== 'undefined'){
     const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
-    console.log(booked);
     res.render("student_lesson_cancel_form", {booked: booked.lessons});
   }else
     res.redirect("/login")
 });
 
 exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
-  body("name")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Name is required");
+    const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
+  await User.findOneAndUpdate({_id: req.session.passport.user}, {$pull:{lessons: req.body.lessonid}});
+  await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
 
-  body("surname")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Surname is required");
-
-  const errors = validationResult(req);
-  if(!errors.isEmpty()){
-    res.render("student_lesson_cancel_form", {errors: errors.array()})
-    return;
-  }
-
-  const student = await User.findOne({name: req.body.name, surname: req.body.surname});
-
-  if(!student){
-    res.send("User not found");
-    return;
-  }
-
-  if(req.body.lessonid){
-    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$pull:{lessons: req.body.lessonid}});
-    await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
-    res.redirect("/admin");
-    return;
-  }
-
-  res.render("student_lesson_cancel_form", {name:req.body.name, surname: req.body.surname, lessons: booked.lessons});
+  res.render("student_lesson_cancel_form", {lessons: booked.lessons});
 });
 
 exports.password_update_get = asyncHandler(async(req,res,next)=>{
