@@ -2,13 +2,6 @@ extend student_main
 
 block content
   h1= "Lesson booking"
-  if name
-    form(method='POST', action='') 
-      label(for='name') Student name
-      input(type='search', name='name' id='name', value=name, readonly=true)
-      label(for='surname') Student surname
-      input(type='search', name='surname', id='surname', value=surname, readonly=true)
-      button(type='submit') Find
     each lesson in lessons 
       form(method='POST', action='')
         dl  
@@ -22,11 +15,3 @@ block content
         input(type='hidden', name='surname', value=surname)
         input(type='hidden', name='lessonid', value=lesson._id)
         button(type='submit') Book
-  else 
-    form(method='POST', action='') 
-      label(for='name') Student name
-      input(type='search', name='name' id='name')
-      label(for='surname') Student surname
-      input(type='search', name='surname', id='surname')
-      button(type='submit') Find
-    
