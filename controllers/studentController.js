@@ -47,7 +47,7 @@ exports.lesson_cancel_get = asyncHandler(async(req,res,next)=>{
 });
 
 exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
-    const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
+  const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
   await User.findOneAndUpdate({_id: req.session.passport.user}, {$pull:{lessons: req.body.lessonid}});
   await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
 
@@ -62,35 +62,25 @@ exports.password_update_get = asyncHandler(async(req,res,next)=>{
 })
 
 exports.password_update_post = asyncHandler(async(req,res,next)=>{
-  body("name")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Name is required");
-
-  body("surname")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Surname is required");
+  body("old_password")
+    .trim()
+    .escape()
+    .isLength({min: 1})
+    .withMessage("Old password is required")
 
   const errors = validationResult(req);
+
   if(!errors.isEmpty()){
     res.render("student_password_update_form", {errors: errors.array()});
+  }
+    
+  const student = await User.findOne({_id: req.session.passport.user});
+  if(student.password===req.body.old_password){
+    await User.findOneAndUpdate({_id: req.session.passport.user}, {password:req.body.new_password});
+    res.redirect("/student");
     return;
+  }else{
+    const message = {text: "Old password is not correct"};
+    res.render("student_password_update_form", {message: message})
   }
-  
-  const student = await User.findOne({username:req.body.username})
-
-  if(!student){
-    res.send("User not found");
-    return;
-  }
-
-  if(req.body.old_password&&student.password===req.body.old_password){
-      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.new_password});
-      res.redirect("/student");
-      return;
-  }
-  res.render("student_password_update_form", {username: req.body.username})
-})
+});
