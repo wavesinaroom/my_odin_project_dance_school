@@ -43,17 +43,19 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
 exports.lesson_cancel_get = asyncHandler(async(req,res,next)=>{
   if(typeof(req.session.passport)!== 'undefined'){
     const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
+    console.log("GET BOOKED: ",booked);
     res.render("student_lesson_cancel_form", {booked: booked.lessons});
   }else
     res.redirect("/login")
 });
 
 exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
-  const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
   await User.findOneAndUpdate({_id: req.session.passport.user}, {$pull:{lessons: req.body.lessonid}});
   await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
+  const booked = await User.findOne({_id: req.session.passport.user}, {lessons: 1}).populate("lessons");
+  console.log("GET BOOKED: ", booked);
 
-  res.render("student_lesson_cancel_form", {lessons: booked.lessons});
+  res.render("student_lesson_cancel_form", {booked: booked.lessons});
 });
 
 exports.password_update_get = asyncHandler(async(req,res,next)=>{
