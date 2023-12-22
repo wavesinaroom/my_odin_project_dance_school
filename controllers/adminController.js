@@ -324,6 +324,8 @@ exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
 
   const student = await User.findOne({name:req.body.name, surname:req.body.surname}).exec();
   if(!student){
+    const feedback = {message: "Invalid user name/surname"}
+    res.render("admin_password_update_form", {feedback: feedback});
     res.send("User name or surname is invalid");
     return;
   }
