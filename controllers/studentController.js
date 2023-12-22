@@ -24,14 +24,16 @@ exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
   const existingLesson = await User.findOne({_id: req.session.passport.user, lessons: lesson});
 
   if(existingLesson){
-    res.send("Lesson is already booked");
+    const message = {text: "Lessons is already booked"};
+    res.render("student_lesson_booking_form", {message: message, lessons:lessons});
     return;
   }
   
   if(lesson){
     await User.findOneAndUpdate({_id: req.session.passport.user}, {$push: {lessons:lesson}}); 
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots:1}});
-    res.redirect("/student")
+    const updated = await Lesson.find({});
+    res.render("student_lesson_booking_form", {lessons:updated});
     return;
   }
 

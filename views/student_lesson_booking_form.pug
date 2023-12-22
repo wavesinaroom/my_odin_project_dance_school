@@ -3,6 +3,9 @@ extend student_main
 block content
   h1= "Lesson booking"
 
+  if message
+    p #{message.text}
+
   each lesson in lessons 
     form(method='POST', action='')
       dl  
