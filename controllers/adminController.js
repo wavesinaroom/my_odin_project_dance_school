@@ -158,7 +158,8 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
     const existingUser = await User.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
 
     if(existingUser){
-      res.send("User already exists");
+      const feedback = {message: 'Student already exists'};
+      res.render("admin_sign_up_student_form", {feedback: feedback});
       return;
     }
 
@@ -239,15 +240,19 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
   const booked = await User.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
 
   if(booked){
-    res.send("Lesson's already booked");
+    const feedback = {message: "Lesson is already booked"}
+    res.render("admin_student_lesson_booking", {feedback: feedback});
     return;
   }else{
     if(lesson.booked_spots<lesson.number_spots){
       await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
       await Lesson.findByIdAndUpdate(lesson._id, {$inc: {booked_spots: 1}}).exec();
-      res.redirect("/admin");
+      res.render("admin_student_lesson_booking");
+      return;
     }else{
-      res.send("Lesson is not available")
+      const feedback = {message: "Lesson is not available"};
+      res.render("admin_student_lesson_booking", {feedback: feedback});
+      return;
     }
   }
   

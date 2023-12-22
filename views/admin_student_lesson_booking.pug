@@ -3,6 +3,10 @@ extends admin_main
 block content
 
   h1= "Lesson Booking" 
+
+  if feedback
+    p #{feedback.message}
+
   h2= Dashboard
   form(method='POST' action='')
     label(for='name') Student name
