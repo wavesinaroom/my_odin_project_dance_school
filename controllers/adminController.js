@@ -84,13 +84,17 @@ exports.lesson_create_post= [
 
       const teacherBusy = await Lesson.findOne({day: req.body.day, time:req.body.time, teacher: req.body.teacher});
       
-      if(teacherBusy)
-        res.render("admin_create_teacher_busy", {time:req.body.time, day:req.body.day});
-      else if(classroomTaken)
-        res.render("admin_create_lesson_exists", {time:req.body.time, day: req.body.day});
+      if(teacherBusy){
+        const feedback = {message: `Can't scheduled teacher at ${req.body.time} on ${req.body.day}`};
+        res.render("admin_create_lesson_form", {feedback: feedback});
+      }
+      else if(classroomTaken){
+        const feedback = {message: `Classroom is not available at ${req.body.time} on ${req.body.day}`};
+        res.render("admin_create_lesson_form", {feedback: feedback});
+      }
       else{
         await lesson.save();
-        res.redirect("/admin");
+        res.render("admin_create_lesson_form");
       }
     }
 
