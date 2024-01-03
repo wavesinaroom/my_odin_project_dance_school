@@ -1,34 +1,17 @@
 extend student_main
 
 block content
-  main
-    h1= "Cancel lesson"
-    if name
+  h1= "Cancel lesson"
+  if booked
+    each lesson in booked
       form(method='POST', action='')
-        label(for='name') Name
-        input(type='search', name='name', id='name', value=name, readonly=true)
-        label(for='surname') Surname
-        input(type='search', name='surname', id='surname', value=surname, readonly=true)
-      each lesson in lessons
-        form(method='POST', action='')
-          dl
-            dt #{lesson.style}
-            dd #{lesson.teacher}
-            dd #{lesson.day} 
-            dd #{lesson.time}
-            dd #{lesson.classroom}
-          input(type='hidden', name='name', value=name)
-          input(type='hidden', name='surname', value=surname)
-          input(type='hidden', name='lessonid' value=lesson._id)
-          button(type='submit') Cancel
-    else
-      form(method='POST', action='')
-        label(for='name') Name
-        input(type='search', name='name', id='name')
-        label(for='surname') Surname
-        input(type='search', name='surname', id='surname')
-        button(type='submit') Find
-
-
-
-
+        dl
+          dt #{lesson.style}
+          dd #{lesson.teacher}
+          dd #{lesson.day} 
+          dd #{lesson.time}
+          dd #{lesson.classroom}
+        input(type='hidden', name='name', value=name)
+        input(type='hidden', name='surname', value=surname)
+        input(type='hidden', name='lessonid' value=lesson._id)
+        button(type='submit') Cancel

@@ -4,11 +4,17 @@ const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.render("admin_main");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_main");
+  else
+    res.redirect('/login')
 });
 
 exports.lesson_create_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_create_lesson_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_create_lesson_form");
+  else
+    res.redirect('/login')
 });
 
 exports.lesson_create_post= [
@@ -78,13 +84,17 @@ exports.lesson_create_post= [
 
       const teacherBusy = await Lesson.findOne({day: req.body.day, time:req.body.time, teacher: req.body.teacher});
       
-      if(teacherBusy)
-        res.render("admin_create_teacher_busy", {time:req.body.time, day:req.body.day});
-      else if(classroomTaken)
-        res.render("admin_create_lesson_exists", {time:req.body.time, day: req.body.day});
+      if(teacherBusy){
+        const feedback = {message: `Can't scheduled teacher at ${req.body.time} on ${req.body.day}`};
+        res.render("admin_create_lesson_form", {feedback: feedback});
+      }
+      else if(classroomTaken){
+        const feedback = {message: `Classroom is not available at ${req.body.time} on ${req.body.day}`};
+        res.render("admin_create_lesson_form", {feedback: feedback});
+      }
       else{
         await lesson.save();
-        res.redirect("/admin");
+        res.render("admin_create_lesson_form");
       }
     }
 
@@ -92,9 +102,12 @@ exports.lesson_create_post= [
 ]
 
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
-  const lessons = await Lesson.find({}).exec();
-  res.render("admin_delete_lessons_table", {lessons: lessons})
-  res.redirect("/admin");
+  if(typeof(req.session.passport) !== 'undefined'){
+    const lessons = await Lesson.find({}).exec();
+    res.render("admin_delete_lessons_table", {lessons: lessons})
+    res.redirect("/admin");
+  }else
+    res.redirect('/login')
 });
 
 exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
@@ -104,7 +117,10 @@ exports.lesson_delete_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_sign_up_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_sign_up_student_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_sign_up_student_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
@@ -142,7 +158,8 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
     const existingUser = await User.findOne({name: req.body.name, surname: req.body.surname, username: req.body.username}).exec();
 
     if(existingUser){
-      res.send("User already exists");
+      const feedback = {message: 'Student already exists'};
+      res.render("admin_sign_up_student_form", {feedback: feedback});
       return;
     }
 
@@ -151,7 +168,10 @@ exports.student_sign_up_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_remove_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_remove_student_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_remove_student_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_remove_post = asyncHandler(async(req,res,next)=>{
@@ -184,8 +204,11 @@ else{
   }),
 
 exports.student_lesson_booking_get = asyncHandler(async(req,res,next)=>{
-  const lessons = await Lesson.find({}).exec();
-  res.render("admin_student_lesson_booking", {lessons:lessons});
+  if(typeof(req.session.passport) !== 'undefined'){
+    const lessons = await Lesson.find({}).exec();
+    res.render("admin_student_lesson_booking", {lessons:lessons});
+  }else
+    res.redirect('/login')
 });
 
 exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
@@ -217,22 +240,29 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
   const booked = await User.findOne({name: req.body.name, surname: req.body.surname, lessons: lesson}).exec();
 
   if(booked){
-    res.send("Lesson's already booked");
+    const feedback = {message: "Lesson is already booked"}
+    res.render("admin_student_lesson_booking", {feedback: feedback});
     return;
   }else{
     if(lesson.booked_spots<lesson.number_spots){
       await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
       await Lesson.findByIdAndUpdate(lesson._id, {$inc: {booked_spots: 1}}).exec();
-      res.redirect("/admin");
+      res.render("admin_student_lesson_booking");
+      return;
     }else{
-      res.send("Lesson is not available")
+      const feedback = {message: "Lesson is not available"};
+      res.render("admin_student_lesson_booking", {feedback: feedback});
+      return;
     }
   }
   
 });
 
 exports.student_lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.render("admin_lesson_cancel_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_lesson_cancel_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
@@ -268,7 +298,10 @@ exports.student_lesson_cancel_post = asyncHandler(async(req,res,next)=>{
 });
 
 exports.student_reset_password_get = asyncHandler(async(req, res, nex)=>{
-  res.render("admin_password_update_form");
+  if(typeof(req.session.passport) !== 'undefined')
+    res.render("admin_password_update_form");
+  else
+    res.redirect('/login')
 });
 
 exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
@@ -291,6 +324,8 @@ exports.student_reset_password_post = asyncHandler(async(req, res, nex)=>{
 
   const student = await User.findOne({name:req.body.name, surname:req.body.surname}).exec();
   if(!student){
+    const feedback = {message: "Invalid user name/surname"}
+    res.render("admin_password_update_form", {feedback: feedback});
     res.send("User name or surname is invalid");
     return;
   }

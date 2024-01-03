@@ -14,9 +14,9 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
 const session = require("express-session");
-const passport = require("passport")
+const passport = require("passport"); 
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/users")
+const User = require("./models/users");
 
 main().catch((err) => console.log(err));
 async function main(){
@@ -33,9 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({secret: "cats", resave: false, saveUninitialized: true}));
+app.use(session({secret: "cats", resave: false, saveUninitialized: true, cookie:{maxAge: 300000}}));
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(express.urlencoded({extended:false}));
 
 passport.use(
@@ -76,17 +77,17 @@ app.get("/login",(req,res)=>{
   res.render("login")
 });
 
-app.post("/",
+app.post("/login",
   passport.authenticate("local", {
     failureRedirect: "/",
   }),(req,res)=>{
-    if(req.body.username === "admin")
+    if(req.body.username === "admin"){
       res.redirect("/admin")
+      return;
+    }
     res.redirect("/student");
   }
 )
-
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

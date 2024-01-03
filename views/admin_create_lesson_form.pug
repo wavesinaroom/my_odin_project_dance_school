@@ -4,6 +4,9 @@ block content
 
   h1 Create lesson
 
+  if feedback
+    p #{feedback.message}
+
   form(method='POST' action='')
     label(for='number_spots') Spots available
     input(type='text', name='number_spots', required='true')

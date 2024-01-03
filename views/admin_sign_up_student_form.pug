@@ -4,6 +4,9 @@ block content
 
   h1 Student signup
 
+  if feedback
+    p #{feedback.message}
+
   form(method='POST' action='')
     label(for='name') Name
     input(type='text', name='name', required='true')

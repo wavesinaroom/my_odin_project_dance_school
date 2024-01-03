@@ -4,132 +4,87 @@ const Lesson = require("../models/lesson");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async(req,res,next)=>{
-  res.render("student_main");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_main");
+  else
+    res.redirect("/login")
 });
 
 exports.lesson_booking_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_lesson_booking_form");
+  const lessons = await Lesson.find({});
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_lesson_booking_form", {lessons: lessons});
+  else
+    res.redirect("/login")
 });
 
 exports.lesson_booking_post = asyncHandler(async(req,res,next)=>{
-  body("name")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Name is required");
-
-  body("surname")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Surname is required");
-  
-  const errors = validationResult(req);
-  if(!errors.isEmpty()){
-    res.render("student_lesson_booking_form", {error:errors.array()});
-    return;
-  }
-
-  const student = await User.findOne({name: req.body.name, surname: req.body.surname}).exec(); 
   const lessons = await Lesson.find({}).exec();
   const lesson = await Lesson.findById(req.body.lessonid);
-  const existingLesson = await User.findOne({name: req.body.name, surname:req.body.surname, lessons: lesson})
-
-  if(!student){
-    res.send("User not found");
-    return;
-  }
+  const existingLesson = await User.findOne({_id: req.session.passport.user, lessons: lesson});
 
   if(existingLesson){
-    res.send("Lesson is already booked");
+    const message = {text: "Lessons is already booked"};
+    res.render("student_lesson_booking_form", {message: message, lessons:lessons});
     return;
   }
   
-  if(req.body.lessonid){
-    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$push: {lessons:lesson}}); 
+  if(lesson){
+    await User.findOneAndUpdate({_id: req.session.passport.user}, {$push: {lessons:lesson}}); 
     await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots:1}});
-    res.redirect("/student")
+    const updated = await Lesson.find({});
+    res.render("student_lesson_booking_form", {lessons:updated});
     return;
   }
 
-  res.render("student_lesson_booking_form",{name:req.body.name,surname:req.body.surname, lessons: lessons});
+  res.render("student_lesson_booking_form",{lessons: lessons});
 });
 
 exports.lesson_cancel_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_lesson_cancel_form");
+  if(typeof(req.session.passport)!== 'undefined'){
+    const booked = await User.findOne({_id: req.session.passport.user}, {lessons:1}).populate("lessons");
+    console.log("GET BOOKED: ",booked);
+    res.render("student_lesson_cancel_form", {booked: booked.lessons});
+  }else
+    res.redirect("/login")
 });
 
 exports.lesson_cancel_post = asyncHandler(async(req,res,next)=>{
-  body("name")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Name is required");
+  await User.findOneAndUpdate({_id: req.session.passport.user}, {$pull:{lessons: req.body.lessonid}});
+  await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
+  const booked = await User.findOne({_id: req.session.passport.user}, {lessons: 1}).populate("lessons");
+  console.log("GET BOOKED: ", booked);
 
-  body("surname")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Surname is required");
-
-  const errors = validationResult(req);
-  if(!errors.isEmpty()){
-    res.render("student_lesson_cancel_form", {errors: errors.array()})
-    return;
-  }
-
-  const student = await User.findOne({name: req.body.name, surname: req.body.surname});
-  const booked = await User.findOne({name: req.body.name, surname: req.body.surname}, {lessons:1}).populate("lessons").exec();
-
-  if(!student){
-    res.send("User not found");
-    return;
-  }
-
-  if(req.body.lessonid){
-    await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname}, {$pull:{lessons: req.body.lessonid}});
-    await Lesson.findByIdAndUpdate(req.body.lessonid, {$inc:{booked_spots: -1}});
-    res.redirect("/admin");
-    return;
-  }
-
-  res.render("student_lesson_cancel_form", {name:req.body.name, surname: req.body.surname, lessons: booked.lessons});
+  res.render("student_lesson_cancel_form", {booked: booked.lessons});
 });
 
 exports.password_update_get = asyncHandler(async(req,res,next)=>{
-  res.render("student_password_update_form");
+  if(typeof(req.session.passport)!== 'undefined')
+    res.render("student_password_update_form");
+  else
+    res.redirect("/login")
 })
 
 exports.password_update_post = asyncHandler(async(req,res,next)=>{
-  body("name")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Name is required");
-
-  body("surname")
-  .trim()
-  .isLength({min:1})
-  .escape()
-  .withMessage("Surname is required");
+  body("old_password")
+    .trim()
+    .escape()
+    .isLength({min: 1})
+    .withMessage("Old password is required")
 
   const errors = validationResult(req);
+
   if(!errors.isEmpty()){
     res.render("student_password_update_form", {errors: errors.array()});
+  }
+    
+  const student = await User.findOne({_id: req.session.passport.user});
+  if(student.password===req.body.old_password){
+    await User.findOneAndUpdate({_id: req.session.passport.user}, {password:req.body.new_password});
+    res.redirect("/student");
     return;
+  }else{
+    const message = {text: "Old password is not correct"};
+    res.render("student_password_update_form", {message: message})
   }
-  
-  const student = await User.findOne({username:req.body.username})
-
-  if(!student){
-    res.send("User not found");
-    return;
-  }
-
-  if(req.body.old_password&&student.password===req.body.old_password){
-      await User.findOneAndUpdate({username: req.body.username}, {password:req.body.new_password});
-      res.redirect("/student");
-      return;
-  }
-  res.render("student_password_update_form", {username: req.body.username})
-})
+});
