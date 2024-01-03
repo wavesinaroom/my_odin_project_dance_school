@@ -8,16 +8,23 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const studentRouter = require('./routes/student');
-
-var app = express();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://Cluster83069:Waves&MongoDB@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
+const dev_db_url = "mongodb+srv://Cluster83069:Pärnu&1090.mongodb@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
+const mongoDB = process.env.MONGODB_URI||dev_db_url;
 const session = require("express-session");
 const passport = require("passport"); 
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("./models/users");
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1*60*1000,
+  max: 20,
+});
 
+var app = express();
 main().catch((err) => console.log(err));
 async function main(){
   await mongoose.connect(mongoDB);
@@ -31,6 +38,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({secret: "cats", resave: false, saveUninitialized: true, cookie:{maxAge: 300000}}));
@@ -38,6 +46,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.urlencoded({extended:false}));
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  }),
+);
+
+app.use(limiter);
 
 passport.use(
   new LocalStrategy(async(username, password, done)=>{
