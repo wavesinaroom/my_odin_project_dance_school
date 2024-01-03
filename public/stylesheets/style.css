@@ -39,10 +39,3 @@ nav{
   max-width: 10em;
 }
 
-#student{
-  display: flex;
-}
-
-#student main{
-  margin-left: 3em;
-}
