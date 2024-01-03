@@ -5,7 +5,8 @@ a{
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin-left: 25vw;
-  margin-top: 25vh
+  margin-top: 25vh;
+  display: flex;
 }
 
 button{
@@ -39,3 +40,6 @@ nav{
   max-width: 10em;
 }
 
+main{
+  margin-left: 3em;
+}
