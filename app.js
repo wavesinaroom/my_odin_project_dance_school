@@ -10,8 +10,9 @@ const adminRouter = require('./routes/admin');
 const studentRouter = require('./routes/student');
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const dev_db_url = "mongodb+srv://Cluster83069:Pärnu&1090.mongodb@cluster83069.aqfxkzp.mongodb.net/dance_school?retryWrites=true&w=majority"
-const mongoDB = process.env.MONGODB_URI||dev_db_url;
+require("dotenv").config();
+const mongoDB = process.env.MONGODB_URI
+console.log(process.env.MONGODB_URI)
 const session = require("express-session");
 const passport = require("passport"); 
 const LocalStrategy = require("passport-local").Strategy;
