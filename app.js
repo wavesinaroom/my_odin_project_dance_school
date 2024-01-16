@@ -12,7 +12,6 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 require("dotenv").config();
 const mongoDB = process.env.MONGODB_URI
-console.log(process.env.MONGODB_URI)
 const session = require("express-session");
 const passport = require("passport"); 
 const LocalStrategy = require("passport-local").Strategy;
