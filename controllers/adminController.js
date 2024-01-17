@@ -103,9 +103,8 @@ exports.lesson_create_post= [
 
 exports.lesson_delete_get = asyncHandler(async(req,res,next)=>{
   if(typeof(req.session.passport) !== 'undefined'){
-    const lessons = await Lesson.find({}).exec();
+    const lessons = await Lesson.find({});
     res.render("admin_delete_lessons_table", {lessons: lessons})
-    res.redirect("/admin");
   }else
     res.redirect('/login')
 });
@@ -247,7 +246,8 @@ exports.student_lesson_booking_post = asyncHandler(async(req,res,next)=>{
     if(lesson.booked_spots<lesson.number_spots){
       await User.findOneAndUpdate({name: req.body.name, surname: req.body.surname,$push:{lessons: lesson}}).exec();
       await Lesson.findByIdAndUpdate(lesson._id, {$inc: {booked_spots: 1}}).exec();
-      res.render("admin_student_lesson_booking");
+      const lessons = await Lesson.find({});
+      res.render("admin_student_lesson_booking", {lessons: lessons});
       return;
     }else{
       const feedback = {message: "Lesson is not available"};
